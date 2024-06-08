@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!-- Generated file. This file is used by SDK to show example inside Welcome screen. It is not the part of the example. -->
+<instructionals module="Aurora OS Examples">
+ <examples>
+  <example name="Tiny PDF Viewer" projectPath="ru.aurora.TinyPdfViewer.pro" imageUrl="C:/Users/retereum/AppData/Roaming/AuroraOS-SDK/QtCreator\Aurora OS Examples\TinyPdfViewer\example-icon.png">
+   <description><![CDATA[Simple PDF Viewer application.]]></description>
+   <tags>Qt,example</tags>
+   <platforms>Mer</platforms>
+   <preferredFeatures>Mer.Wizard.Feature.Emulator</preferredFeatures>
+   <fileToOpen>/qml/ru.aurora.TinyPdfViewer.qml</fileToOpen>
+  </example>
+ </examples>
+</instructionals>

@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+X-Nemo-Application-Type=silica-qt5
+Icon=ru.aurora.TinyPdfViewer
+Exec=/usr/bin/ru.aurora.TinyPdfViewer
+Name=PDF Viewer
+Name[ru]=Просмотр PDF
+
+[X-Application]
+Permissions=UserDirs;RemovableMedia;MediaIndexing
+OrganizationName=ru.aurora
+ApplicationName=TinyPdfViewer
+ExecDBus=/usr/bin/ru.aurora.TinyPdfViewer
