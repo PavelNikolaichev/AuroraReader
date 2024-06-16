@@ -24,7 +24,7 @@ Page {
                 if (pageStack.currentPage === null || pageStack.currentPage.objectName === root.objectName)
                     return
 
-                var contentPage = pageStack.find(function(page) { if (page.objectName === "contentPage") return page })
+                var contentPage = pageStack.find(function(page) { if (page.objectName === "contentPage" || page.objectName === "txtContentPage") return page })
                 if (contentPage !== undefined)
                     contentPage.checkCurrentFile()
             }
@@ -44,10 +44,13 @@ Page {
     }
 
     function chooseFile(path) {
+        console.log("Adding path: ", path)
         while (pageStack.depth > 1)
             pageStack.pop(undefined, PageStackAction.Immediate)
-
-        pageStack.push(Qt.resolvedUrl("ContentPage.qml"), { filePath: path === undefined ? "" : path })
+// TODO: fix the error with wrong paths
+//        pageStack.push(Qt.resolvedUrl("TxtContentPage.qml"), { txtPath: path === undefined ? "" : path })
+        pageStack.push(Qt.resolvedUrl("TxtContentPage.qml"), { txtPath: path === undefined ? "" : "/run/media/defaultuser/sdk/CoolThings.txt" })
+//        pageStack.push(Qt.resolvedUrl("ContentPage.qml"), { pdfPath: path === undefined ? "" : path })
     }
 
     objectName: "filesPage"

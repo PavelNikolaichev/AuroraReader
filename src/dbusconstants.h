@@ -10,6 +10,7 @@
 #define SPARQL_QUERY QStringLiteral(\
         "PREFIX nfo: <http://tracker.api.gnome.org/ontology/v3/nfo#>" \
         "PREFIX nie: <http://tracker.api.gnome.org/ontology/v3/nie#> " \
-        "SELECT ?path WHERE { ?u nie:url ?path . FILTER(fn:ends-with(nfo:fileName(?u), '.pdf'))}")
+        "SELECT ?path WHERE { ?u nie:url ?path . FILTER(fn:ends-with(nfo:fileName(?u), '.pdf') || fn:ends-with(nfo:fileName(?u), '.txt'))}")
+// . FILTER(fn:ends-with(nfo:fileName(?u), '.pdf') || fn:ends-with(nfo:fileName(?u), '.txt'))
 
 #endif // DBUSCONSTANTS_H

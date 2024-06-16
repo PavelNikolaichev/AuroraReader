@@ -12,6 +12,7 @@
 #include "sortmodel.h"
 #include "dbusadaptor.h"
 #include "fileinfo.h"
+#include "filereader.h"
 
 int main(int argc, char *argv[])
 {
@@ -22,6 +23,8 @@ int main(int argc, char *argv[])
     qmlRegisterType<FilesModel>("ru.aurora.TinyPdfViewer", 1, 0, "FilesModel");
     qmlRegisterType<SortModel>("ru.aurora.TinyPdfViewer", 1, 0, "SortModel");   
     qmlRegisterType<FileInfo>("ru.aurora.TinyPdfViewer", 1, 0, "FileInfo");
+    qmlRegisterType<FileReader>("com.example.filereader", 1, 0, "FileReader");
+
 
     QScopedPointer<QQuickView> view(Aurora::Application::createView());
 

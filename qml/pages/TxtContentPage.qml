@@ -4,20 +4,26 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import Sailfish.Share 1.0
-import ru.omp.amberpdf 1.0
 import ru.aurora.TinyPdfViewer 1.0
+import com.example.filereader 1.0
 import "../controls"
 
 Page {
     id: root
 
-    property string pdfPath
+    property string txtPath
     property int _maxSize: Math.max(Screen.width, Screen.height)
     readonly property var statesNames: ["correctWork", "loadingDocument", "badFile", "fileNotFound"]
+
+    FileReader {
+        id: fileReader
+    }
 
     function checkCurrentFile() {
         fileInfo.refresh()
         if (fileInfo.isExist())
+            // Implement loading properly
+            state = root.statesNames[0]
             return
 
         state = root.statesNames[3]
@@ -26,13 +32,14 @@ Page {
     onStatusChanged: {
         if (pageStack.currentPage.objectName === objectName) {
             if (status === PageStatus.Active && state === statesNames[1]) {
-                pdfPagesView.pdfPath = pdfPath
+                textView.text = fileReader.readTextFile(txtPath)
+                console.log("TextView: ", textView.text);
             }
         }
     }
 
     allowedOrientations: Orientation.All
-    objectName: "contentPage"
+    objectName: "txtContentPage"
     state: root.statesNames[1]
 
     TextArea {
@@ -63,13 +70,13 @@ Page {
         titleColor: infoIcon.highlighted ? palette.highlightColor : Theme.primaryColor
         width: root.width
         y: toolBar.open ? 0 : -height
-        z: pdfPagesView.z + 1
+        z: textView.z + 1
 
         Rectangle {
             id: pageHeaderBackground
 
             z: -1
-            color: pdfPagesView.zoom > 1.0
+            color: textView.contentY > 0
                    ? Theme.rgba(Theme.overlayBackgroundColor, Theme.opacityOverlay)
                    : "transparent"
             anchors.fill: parent
@@ -100,60 +107,31 @@ Page {
             onClicked: pageStack.push(Qt.resolvedUrl("DetailsPage.qml"), {
                                           pageCount: root.state === root.statesNames[1]
                                                      ? qsTr("Loading")
-                                                     : pdfPagesView.count,
+                                                     : textView.length,
                                           fileInfo: fileInfo
                                       })
         }
     }
 
-    PdfView {
-        id: pdfPagesView
+    TextArea {
+        id: textView
 
-        property var previousStatus: PdfDocument.Null
-
-        onClicked: toolBar.trySetState(!toolBar.open)
-        onCountChanged: {
-            if (count < 0)
-                return
-
-            if (pageStack.currentPage.objectName === "aboutFilePage")
-                pageStack.currentPage.pageCount = pdfView.count
-        }
-        onStatusChanged: {
-            if (previousStatus === status)
-                return
-
-            switch(previousStatus) {
-            case PdfDocument.Null:
-                root.state = (status === PdfDocument.Loading ? root.statesNames[1] : root.statesNames[2])
-                break
-            case PdfDocument.Loading:
-                root.state = (status === PdfDocument.Ready ? root.statesNames[0] : root.statesNames[2])
-                toolBar.trySetState(true)
-                break
-            case PdfDocument.Ready:
-                root.state = root.statesNames[3]
-                previousStatus = PdfDocument.Error
-                break
-            }
-
-            if (previousStatus !== PdfDocument.Error)
-                previousStatus = status
-        }
-        onNoteActivate: pageStack.push(Qt.resolvedUrl("NotePage.qml"), { noteText: noteText, author: author })
-        onClickedUrl: Qt.openUrlExternally(url)
-
-        objectName: "pdfView"
+        width: parent.width
+        height: parent.height - pageHeader.height - toolBar.height
+        readOnly: true
+        wrapMode: TextEdit.Wrap
         anchors {
             top: pageHeader.bottom
             bottom: toolBar.top
-            right: parent.right
             left: parent.left
+            right: parent.right
         }
-        documentProvider: pdfiumProvider
-        clip: true
-        annotationsPaint: true
-        notesPaint: true
+
+        text: "Testing asjkdljsdckvnefiwpedocvmernofiwdejaskoldcfkreijwdoasxmcvfiogejwp" +
+              "Lorem ipsum dolor sit amet, consectetur adipisicing elit, " +
+                      "sed do eiusmod tempor incididunt ut labore et dolore magna " +
+                      "aliqua. Ut enim ad minim veniam, quis nostrud exercitation " +
+                      "ullamco laboris nisi ut aliquip ex ea commodo cosnsequat. "
     }
 
     ToolBar {
@@ -200,24 +178,22 @@ Page {
         IconButton {
             id: scrollingButton
 
-            onClicked: pdfPagesView.orientation = pdfPagesView.orientation === Qt.Vertical ? Qt.Horizontal : Qt.Vertical
+            onClicked: textView.verticalScrollBarPolicy = textView.verticalScrollBarPolicy === TextArea.ScrollBarAsNeeded ? TextArea.ScrollBarAlwaysOff : TextArea.ScrollBarAsNeeded
 
             icon.height: Theme.iconSizeMedium
             icon.width: Theme.iconSizeMedium
             anchors.verticalCenter: parent.verticalCenter
-            icon.source: pdfPagesView.orientation === ListView.Horizontal
-                         ? "../images/icon-m-scroll-horizontal.svg"
-                         : "../images/icon-m-scroll-vertical.svg"
+            icon.source: "../images/icon-m-scroll-vertical.svg"
         }
 
         MouseArea {
             id: navigationButton
 
             onClicked: {
-                 var navigationPage = pageStack.push(Qt.resolvedUrl("NavigationPage.qml"), {
-                                                         count: pdfPagesView.count,
+                var navigationPage = pageStack.push(Qt.resolvedUrl("NavigationPage.qml"), {
+                                                         count: textView.length,
                                                      })
-                navigationPage.pageSelected.connect(function(page) { pdfPagesView.goToPage(page - 1) })
+                navigationPage.pageSelected.connect(function(page) { textView.position = page - 1 })
             }
 
             height: Theme.itemSizeMedium
@@ -227,7 +203,7 @@ Page {
             Label {
                 id: navigationButtonLabel
 
-                text: qsTr("%L1 | %L2").arg(pdfPagesView.currentIndex + 1).arg(pdfPagesView.count)
+                text: qsTr("%L1 | %L2").arg(textView.position + 1).arg(textView.length)
                 color: navigationButton.pressed ? palette.highlightBackgroundColor : palette.primaryColor
                 font.pixelSize: Theme.fontSizeSmall
                 anchors.centerIn: parent
@@ -235,17 +211,11 @@ Page {
         }
     }
 
-    PdfDocument {
-        id: pdfiumProvider
-
-        objectName: "pdfDocument"
-    }
-
     FileInfo {
         id: fileInfo
 
         objectName: "fileInfo"
-        path: root.pdfPath
+        path: root.txtPath
     }
 
     ShareAction {
@@ -257,27 +227,27 @@ Page {
         State {
             name: root.statesNames[0]
 
-            PropertyChanges { target: pdfPagesView; visible: true }
+            PropertyChanges { target: textView; visible: true }
         },
         State {
             name: root.statesNames[1]
 
-            PropertyChanges { target: pdfPagesView; visible: false }
+            PropertyChanges { target: textView; visible: false }
         },
         State {
             name: root.statesNames[2]
 
-            PropertyChanges { target: root; pdfPath: "" }
+            PropertyChanges { target: root; txtPath: "" }
             PropertyChanges { target: errorText; text: qsTr("Could not open document") }
-            PropertyChanges { target: pdfPagesView; enabled: false }
+            PropertyChanges { target: textView; enabled: false }
             PropertyChanges { target: toolBar; open: false }
         },
         State {
             name: root.statesNames[3]
 
-            PropertyChanges { target: root; pdfPath: "" }
+            PropertyChanges { target: root; txtPath: "" }
             PropertyChanges { target: errorText; text: qsTr("File not found") }
-            PropertyChanges { target: pdfPagesView; enabled: false }
+            PropertyChanges { target: textView; enabled: false }
             PropertyChanges { target: toolBar; open: false }
         }
     ]

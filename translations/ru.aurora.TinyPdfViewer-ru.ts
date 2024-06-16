@@ -4,20 +4,20 @@
 <context>
     <name>ContentPage</name>
     <message>
-        <source>Could not open document</source>
-        <translation>Не удалось открыть документ</translation>
-    </message>
-    <message>
-        <source>File not found</source>
-        <translation>Файл не найден</translation>
+        <source>Loading</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>%L1 | %L2</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Loading</source>
-        <translation>Загрузка</translation>
+        <source>Could not open document</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>File not found</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -128,13 +128,21 @@
     </message>
 </context>
 <context>
-    <name>PdfFileHandler</name>
+    <name>TxtContentPage</name>
     <message>
-        <source>Could not open PDF document</source>
+        <source>Loading</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Invalid PDF file</source>
+        <source>%L1 | %L2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not open document</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>File not found</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
