@@ -43,13 +43,34 @@ Page {
         filterRegExp: RegExp(escapeRegExp(filesView.searchText), "i")
     }
 
+    function getFileExtension(filename) {
+        return filename.split('.').pop()
+    }
+
     function chooseFile(path) {
+        var extensionToComponent = {
+            "txt": "TxtContentPage.qml",
+            "pdf": "ContentPage.qml",
+        }
+
         console.log("Adding path: ", path)
+        console.log("PageStack depth: ", pageStack.depth)
+
         while (pageStack.depth > 1)
             pageStack.pop(undefined, PageStackAction.Immediate)
 // TODO: fix the error with wrong paths
+        console.log("Adding path: ", path)
+        var fileExtension = path.split('.').pop();
+        console.log("Corresponding to: ", extensionToComponent[fileExtension], "Original path: ", path.split('.').pop())
+
+        if (extensionToComponent.hasOwnProperty(fileExtension)) {
+            pageStack.push(Qt.resolvedUrl(extensionToComponent[fileExtension]), { path: path === undefined ? "" : path });
+        } else {
+            console.error("Unsported file type: " + fileExtension);
+        }
+
 //        pageStack.push(Qt.resolvedUrl("TxtContentPage.qml"), { txtPath: path === undefined ? "" : path })
-        pageStack.push(Qt.resolvedUrl("TxtContentPage.qml"), { txtPath: path === undefined ? "" : "/run/media/defaultuser/sdk/CoolThings.txt" })
+//        pageStack.push(Qt.resolvedUrl("TxtContentPage.qml"), { txtPath: path === undefined ? "" : "/run/media/defaultuser/sdk/CoolThings.txt" })
 //        pageStack.push(Qt.resolvedUrl("ContentPage.qml"), { pdfPath: path === undefined ? "" : path })
     }
 

@@ -29,7 +29,8 @@ void TrackerQueryWorker::run()
 
     // NOTE: Make it pretter.
     // TODO: support for other file types along with dbus
-    static const QRegularExpression re(QStringLiteral("(file:\\/\\/).+(.pdf|.txt)"));
+    static const QRegularExpression re(QStringLiteral("(file:\\/\\/).+(.pdf)"));
+    static const QRegularExpression reTxt(QStringLiteral("(file:\\/\\/).+(.txt)"));
     QStringList freshData;
     QTextStream stream(&tmpFile);
     stream.seek(0);
@@ -52,7 +53,7 @@ void TrackerQueryWorker::run()
         }
         strings = string.split(".txt", QString::KeepEmptyParts);
         for (const auto &str : strings) {
-            auto matchIt = re.globalMatch(str + ".txt");
+            auto matchIt = reTxt.globalMatch(str + ".txt");
             while (matchIt.hasNext()) {
                 auto match = matchIt.next();
                 auto path = match.captured(0).remove(QStringLiteral("file://"));

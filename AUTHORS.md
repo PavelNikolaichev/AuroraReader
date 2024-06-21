@@ -22,3 +22,6 @@
   * Reviewer, 2023
 * Oksana Torosyan, <o.torosyan@omp.ru>
   * Designer, 2024
+* Pavel Nikolaitchev
+  * Developer, 2024
+  * Contributor, 2024

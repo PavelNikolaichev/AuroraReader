@@ -28,10 +28,8 @@ HEADERS += \
     src/sortmodel.h \
 
 DISTFILES += \
-    LICENSE.md \
     qml/BaseFileHandler.qml \
     qml/PdfFileHandler.qml \
-    qml/pages/FileHelper.js \
     qml/pages/TextView.qml \
     qml/pages/TxtContentPage.qml \
     rpm/ru.aurora.TinyPdfViewer.spec \

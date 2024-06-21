@@ -11,7 +11,7 @@ import "../controls"
 Page {
     id: root
 
-    property string txtPath
+    property string path
     property int _maxSize: Math.max(Screen.width, Screen.height)
     readonly property var statesNames: ["correctWork", "loadingDocument", "badFile", "fileNotFound"]
 
@@ -32,8 +32,9 @@ Page {
     onStatusChanged: {
         if (pageStack.currentPage.objectName === objectName) {
             if (status === PageStatus.Active && state === statesNames[1]) {
-                textView.text = fileReader.readTextFile(txtPath)
+                textView.text = fileReader.readTextFile(path)
                 console.log("TextView: ", textView.text);
+                state = root.statesNames[0]
             }
         }
     }
@@ -215,7 +216,7 @@ Page {
         id: fileInfo
 
         objectName: "fileInfo"
-        path: root.txtPath
+        path: root.path
     }
 
     ShareAction {
@@ -237,7 +238,7 @@ Page {
         State {
             name: root.statesNames[2]
 
-            PropertyChanges { target: root; txtPath: "" }
+            PropertyChanges { target: root; path: "" }
             PropertyChanges { target: errorText; text: qsTr("Could not open document") }
             PropertyChanges { target: textView; enabled: false }
             PropertyChanges { target: toolBar; open: false }
@@ -245,7 +246,7 @@ Page {
         State {
             name: root.statesNames[3]
 
-            PropertyChanges { target: root; txtPath: "" }
+            PropertyChanges { target: root; path: "" }
             PropertyChanges { target: errorText; text: qsTr("File not found") }
             PropertyChanges { target: textView; enabled: false }
             PropertyChanges { target: toolBar; open: false }

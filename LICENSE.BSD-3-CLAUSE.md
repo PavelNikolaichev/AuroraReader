@@ -1,6 +1,6 @@
 # The 3-Clause BSD License
 
-_Copyright (c) 2023 Open Mobile Platform LLC._
+_Copyright (c) 2024 Open Mobile Platform LLC, Pavel Nikolaitchev
 
 Redistribution and use in source and binary forms,
 with or without modification,
